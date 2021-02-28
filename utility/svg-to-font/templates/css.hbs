@@ -1,0 +1,24 @@
+$svg-font: 'sfi';
+
+@font-face {
+	font-family: $svg-font;
+	src: {{{src}}};
+}
+
+{{baseSelector}} {
+  $this: &;
+	display: inline-block;
+	line-height: 1;
+	font-family: '{{fontName}}';
+	font-style: normal;
+	font-weight: normal !important;
+	vertical-align: top;
+}
+
+{{#each codepoints}}
+.{{../classPrefix}}{{@key}}:before {
+	content: "\\{{this}}";
+}
+{{/each}}
+
+
