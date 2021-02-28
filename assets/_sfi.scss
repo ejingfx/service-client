@@ -2,9 +2,9 @@ $svg-font: 'sfi';
 
 @font-face {
 	font-family: $svg-font;
-	src: url("../static/fonts/SvgFont/sfi.eot?2cfffd86ad335508133d8cfdea6962be?#iefix") format("embedded-opentype"),
-url("../static/fonts/SvgFont/sfi.woff2?2cfffd86ad335508133d8cfdea6962be") format("woff2"),
-url("../static/fonts/SvgFont/sfi.woff?2cfffd86ad335508133d8cfdea6962be") format("woff");
+	src: url("../static/fonts/SvgFont/sfi.eot?7260da8c04c9326551c11848ab60cef4?#iefix") format("embedded-opentype"),
+url("../static/fonts/SvgFont/sfi.woff2?7260da8c04c9326551c11848ab60cef4") format("woff2"),
+url("../static/fonts/SvgFont/sfi.woff?7260da8c04c9326551c11848ab60cef4") format("woff");
 }
 
 .sfi {
@@ -17,65 +17,8 @@ url("../static/fonts/SvgFont/sfi.woff?2cfffd86ad335508133d8cfdea6962be") format(
 	vertical-align: top;
 }
 
-.sfi-arrow-down:before {
+.sfi-logo:before {
 	content: "\f101";
-}
-.sfi-arrow-left:before {
-	content: "\f102";
-}
-.sfi-arrow-right:before {
-	content: "\f103";
-}
-.sfi-arrow-up:before {
-	content: "\f104";
-}
-.sfi-briefcase:before {
-	content: "\f105";
-}
-.sfi-check:before {
-	content: "\f106";
-}
-.sfi-chevron-down:before {
-	content: "\f107";
-}
-.sfi-chevron-left:before {
-	content: "\f108";
-}
-.sfi-chevron-right:before {
-	content: "\f109";
-}
-.sfi-chevron-up:before {
-	content: "\f10a";
-}
-.sfi-cross:before {
-	content: "\f10b";
-}
-.sfi-folder:before {
-	content: "\f10c";
-}
-.sfi-headphones:before {
-	content: "\f10d";
-}
-.sfi-heirarchy:before {
-	content: "\f10e";
-}
-.sfi-home:before {
-	content: "\f10f";
-}
-.sfi-image:before {
-	content: "\f110";
-}
-.sfi-loader:before {
-	content: "\f111";
-}
-.sfi-note:before {
-	content: "\f112";
-}
-.sfi-resource:before {
-	content: "\f113";
-}
-.sfi-send:before {
-	content: "\f114";
 }
 
 

@@ -1,169 +1,49 @@
 <template>
   <v-app id="service-tracker-client">
     <v-navigation-drawer
+      v-if="isAuth"
+      id="drawer-group-container"
       v-model="drawer"
       app
       clipped-left
       dark
       fixed
-      mobile-breakpoint="960"
+      mobile-breakpoint="1200"
     >
-      <v-list>
-        <v-list-item>
-          <v-list-item-icon class="mr-5">
-            <v-avatar
-              color="indigo"
-              size="36"
-            >
-              <span class="white--text">FX</span>
-            </v-avatar>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>Full Name</v-list-item-title>
-            <v-list-item-subtitle>email@domain.com</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
+      <div id="drawer-group">
+        <div id="drawer-group-top">
+          <UserInfoDrawer />
+          <v-divider />
+          <NavDrawer />
+          <v-divider />
+        </div>
 
-      <v-divider />
-
-      <v-list flat>
-        <v-list-item
-          v-for="item in items"
-          :key="item.title"
-          :to="item.to"
-          link
-          dense
-          color="primary"
-          :active="$nuxt.$route.name === 'item.title'"
-        >
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-
-      <v-divider />
-
-      <v-list>
-        <v-list-group>
-          <template #activator>
-            <v-list-item-content>
-              <v-list-item-title>Favorites</v-list-item-title>
-            </v-list-item-content>
-          </template>
-
-          <v-list-item
-            v-for="item in favorites"
-            :key="item.title"
-          >
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ item.title }}
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-group>
-
-        <v-divider />
-
-        <v-list-group>
-          <template #activator>
-            <v-list-item-content>
-              <v-list-item-title>Pages</v-list-item-title>
-            </v-list-item-content>
-          </template>
-
-          <v-list-item
-            v-for="item in pages"
-            :key="item.title"
-          >
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ item.title }}
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-group>
-
-        <v-divider />
-
-        <v-list-group>
-          <template #activator>
-            <v-list-item-content>
-              <v-list-item-title>Forms</v-list-item-title>
-            </v-list-item-content>
-          </template>
-
-          <v-list-item
-            v-for="item in forms"
-            :key="item.title"
-          >
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ item.title }}
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-group>
-      </v-list>
+        <div id="drawer-group-bottom">
+          <v-list>
+            <FavoritesDrawer />
+            <v-divider />
+            <PagesDrawer />
+            <v-divider />
+            <FormsDrawer />
+          </v-list>
+        </div>
+      </div>
 
       <template #append>
         <v-divider />
-        <v-list
-          dense
-          class="py-0"
-        >
-          <v-list-item
-            link
-          >
-            <v-list-item-content class="text-center">
-              <v-list-item-title class="ml-n4">
-                <v-icon small inline>
-                  mdi-plus
-                </v-icon>
-                Invite to Collaborate
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
+        <Invite id="drawer-group-append" />
       </template>
     </v-navigation-drawer>
 
-    <v-app-bar
-      app
-      flat
-    >
-      <v-btn
-        v-if="!drawer"
-        icon
-        @click.stop="drawer = !drawer; mini = !mini"
-      >
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
-
-      <h1 class="title">
-        {{ $nuxt.$route.name | capitalize }}
-      </h1>
-
-      <v-spacer />
-
-      <v-responsive max-width="240">
-        <v-text-field
-          dense
-          flat
-          hide-details
-          rounded
-          solo-inverted
-        />
-      </v-responsive>
-    </v-app-bar>
+    <AppHeader
+      v-if="isAuth"
+      :drawer="drawer"
+      @open="drawer = !drawer"
+    />
 
     <v-main class="grey lighten-3">
       <v-container>
+        {{ isAuth }}
         <nuxt />
       </v-container>
     </v-main>
@@ -171,52 +51,100 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import _ from 'lodash'
+import AppHeader from '@/components/AppHeader'
+import UserInfoDrawer from '@/components/UserInfoDrawer'
+import NavDrawer from '@/components/NavDrawer'
+import FavoritesDrawer from '@/components/FavoritesDrawer'
+import PagesDrawer from '@/components/PagesDrawer'
+import FormsDrawer from '@/components/FormsDrawer'
+import Invite from '@/components/Invite'
+
 export default {
+  components: {
+    AppHeader,
+    UserInfoDrawer,
+    NavDrawer,
+    FavoritesDrawer,
+    PagesDrawer,
+    FormsDrawer,
+    Invite
+  },
   data () {
     return {
-      title: 'Dashboard',
-      logo: require('static/images/logo.jpg'),
       drawer: true,
-      items: [
-        {
-          icon: 'mdi-view-dashboard-outline',
-          title: 'Dashboard',
-          to: '/dashboard'
-        },
-        {
-          icon: 'mdi-email-outline',
-          title: 'Messages',
-          to: '/messages'
-        },
-        {
-          icon: 'mdi-clipboard-outline',
-          title: 'Tickets',
-          to: '/tickets'
-        },
-        {
-          icon: 'mdi-account-outline',
-          title: 'Profile',
-          to: '/profile'
-        },
-        {
-          icon: 'mdi-cog-outline',
-          title: 'Settings',
-          to: '/settings'
-        }
-      ],
-      favorites: [],
-      pages: [],
-      forms: []
+      drawerTracker: {
+        group: 0,
+        top: 0,
+        bottom: 0,
+        append: 0
+      }
     }
   },
   head: {
-    title: 'Service | Dashboard'
+    title: 'Login'
+  },
+  computed: {
+    ...mapState(['isAuth']),
+    getDrawerTracker () { return this.drawerTracker }
+  },
+  mounted () {
+    this.drawerGroupHandler()
+  },
+  methods: {
+    setDrawerTracker (val) {
+      this.drawerTracker = { ...val }
+      this.resizeDrawer()
+    },
+    resizeDrawer () {
+      if (process.browser && this.isAuth) {
+        const containerHeight = this.getDrawerTracker.group - this.getDrawerTracker.append - 4
+        const targetHeight = this.getDrawerTracker.group - this.getDrawerTracker.top - this.getDrawerTracker.append - 4
+
+        document.getElementById('drawer-group')
+          .style.height = `${containerHeight}px`
+        document.getElementById('drawer-group-bottom')
+          .style.height = `${targetHeight}px`
+      }
+    },
+    drawerGroupHandler () {
+      const setDrawerTracker = this.setDrawerTracker
+      if (process.browser && this.isAuth) {
+        const obj = {
+          group: document.getElementById('drawer-group-container').clientHeight,
+          top: document.getElementById('drawer-group-top').clientHeight,
+          bottom: document.getElementById('drawer-group-bottom').clientHeight,
+          append: document.getElementById('drawer-group-append').clientHeight
+        }
+        window.addEventListener('DOMContentLoaded', function () {
+          setDrawerTracker(obj)
+        })
+        window.addEventListener('resize', _.debounce(function () {
+          const obj = {
+            group: document.getElementById('drawer-group-container').clientHeight,
+            top: document.getElementById('drawer-group-top').clientHeight,
+            bottom: document.getElementById('drawer-group-bottom').clientHeight,
+            append: document.getElementById('drawer-group-append').clientHeight
+          }
+          setDrawerTracker(obj)
+        }, 500))
+      }
+    }
   }
 }
 </script>
 
 <style lang="scss">
-.sfi {
-  font-size: 19px;
+@import '@/assets/_mixins';
+.drawer-group-container {
+  overflow: hidden;
+}
+#drawer-group {
+  height: 100vh;
+  overflow: hidden;
+}
+#drawer-group-bottom {
+  overflow-y: scroll;
 }
 </style>

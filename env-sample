@@ -1,0 +1,6 @@
+NUXT_ENV_API_URL='http://localhost:4000/api'
+NUXT_ENV_CANONICAL='http://localhost:4000/api'
+NUXT_ENV_COOKIE_NAME='_nuxt-service-tracker'
+NUXT_ENV_DESCRIPTION=''
+NUXT_ENV_ERROR_MESSAGE_TIMEOUT=3000 
+NUXT_ENV_TITLE='Service Tracker'

@@ -5,6 +5,6 @@
 <script>
 export default {
   name: 'Dashboard',
-  components: {}
+  middleware: ['auth']
 }
 </script>

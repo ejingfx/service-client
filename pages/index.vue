@@ -1,10 +1,10 @@
 <template>
-  <div>Tickets</div>
+  <div>Index</div>
 </template>
 
 <script>
 export default {
-  name: 'Tickets',
+  name: 'Index',
   middleware: ['auth']
 }
 </script>
