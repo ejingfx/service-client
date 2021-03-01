@@ -1,9 +1,9 @@
 export default function ({ store, redirect, route }) {
-  if (route.name === 'dashboard' && !store.state.isAuth) {
-    return redirect('/login')
-  } else if ((route.name === 'login' || route.name === 'register') && store.state.isAuth) {
-    return redirect('/dashboard')
-  } else if (route.name !== 'register' && !store.state.isAuth) {
+  if (!store.state.authenticated && ['login', 'register', 'index'].includes(route.name)) {
+    console.log('redirect guest -> login')
+    return redirect(route.path)
+  } else if (!store.state.authenticated) {
+    console.log('redirect guest -> login')
     return redirect('/login')
   }
 }

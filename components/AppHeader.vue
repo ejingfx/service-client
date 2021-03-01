@@ -33,7 +33,10 @@
             </v-avatar>
           </v-btn>
         </template>
-        <v-list dense>
+        <v-list
+          dense
+          class="py-0"
+        >
           <v-list-item
             v-for="item in organization"
             :key="item._id"
@@ -44,7 +47,10 @@
           </v-list-item>
         </v-list>
         <v-divider />
-        <v-list dense>
+        <v-list
+          dense
+          class="py-0"
+        >
           <v-list-item
             v-for="(item, index) in menu"
             :key="index"
@@ -55,10 +61,13 @@
           </v-list-item>
         </v-list>
         <v-divider />
-        <v-list dense>
+        <v-list
+          dense
+          class="py-0"
+        >
           <v-list-item
             dense
-            @click.stop="logout()"
+            @click="logout()"
           >
             <v-list-item-title>
               Logout
@@ -99,6 +108,7 @@ export default {
   methods: {
     logout () {
       this.$store.commit('logout')
+      this.$router.push({ name: 'login' })
     }
   }
 }

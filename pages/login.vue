@@ -5,6 +5,6 @@
 <script>
 export default {
   name: 'Login',
-  middleware: ['auth']
+  middleware: ['guest']
 }
 </script>

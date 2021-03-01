@@ -15,7 +15,7 @@ export default {
   name: 'UserInfoDrawer',
   data () {
     return {
-      logo: require('static/svg/logo.svg')
+      logo: require('static/images/logo.png')
     }
   }
 }

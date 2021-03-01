@@ -40,6 +40,7 @@ export default {
           title: 'Tickets',
           to: '/tickets'
         },
+
         {
           icon: 'mdi-cog-outline',
           title: 'Settings',

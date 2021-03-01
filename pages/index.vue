@@ -5,6 +5,6 @@
 <script>
 export default {
   name: 'Index',
-  middleware: ['auth']
+  middleware: ['guest']
 }
 </script>

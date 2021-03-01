@@ -5,6 +5,6 @@
 <script>
 export default {
   name: 'Register',
-  middleware: ['auth']
+  middleware: ['guest']
 }
 </script>

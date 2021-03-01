@@ -1,7 +1,7 @@
 <template>
   <v-app id="service-tracker-client">
     <v-navigation-drawer
-      v-if="isAuth"
+      v-if="authenticated"
       id="drawer-group-container"
       v-model="drawer"
       app
@@ -36,14 +36,13 @@
     </v-navigation-drawer>
 
     <AppHeader
-      v-if="isAuth"
+      v-if="authenticated"
       :drawer="drawer"
       @open="drawer = !drawer"
     />
 
     <v-main class="grey lighten-3">
       <v-container>
-        {{ isAuth }}
         <nuxt />
       </v-container>
     </v-main>
@@ -86,7 +85,7 @@ export default {
     title: 'Login'
   },
   computed: {
-    ...mapState(['isAuth']),
+    ...mapState(['authenticated']),
     getDrawerTracker () { return this.drawerTracker }
   },
   mounted () {
@@ -98,7 +97,7 @@ export default {
       this.resizeDrawer()
     },
     resizeDrawer () {
-      if (process.browser && this.isAuth) {
+      if (process.browser && this.authenticated) {
         const containerHeight = this.getDrawerTracker.group - this.getDrawerTracker.append - 4
         const targetHeight = this.getDrawerTracker.group - this.getDrawerTracker.top - this.getDrawerTracker.append - 4
 
@@ -110,7 +109,7 @@ export default {
     },
     drawerGroupHandler () {
       const setDrawerTracker = this.setDrawerTracker
-      if (process.browser && this.isAuth) {
+      if (process.browser && this.authenticated) {
         const obj = {
           group: document.getElementById('drawer-group-container').clientHeight,
           top: document.getElementById('drawer-group-top').clientHeight,
