@@ -1,6 +1,7 @@
+import PUBLIC_ROUTES from '@/utility/public-routes'
+
 export default function ({ store, redirect, route }) {
-  if (store.state.authenticated && ['login', 'register', 'index'].includes(route.name)) {
-    console.log('redirect user -> dashboard')
+  if (store.state.authenticated && PUBLIC_ROUTES.includes(route.name)) {
     return redirect('/dashboard')
   }
 }

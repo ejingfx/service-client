@@ -87,7 +87,7 @@
                   :loading="loading"
                   type="submit"
                 >
-                  LOGIN
+                  REGISTER
                 </v-btn>
               </v-col>
             </v-row>
@@ -98,7 +98,7 @@
               <v-col cols="12">
                 Already have an account?
                 <nuxt-link to="/login">
-                  Login
+                  Sign In
                 </nuxt-link>
               </v-col>
             </v-row>

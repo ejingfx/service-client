@@ -3,7 +3,7 @@ export default (context, inject) => {
     login: async (payload) => {
       const config = {
         method: 'POST',
-        url: '/user/login',
+        url: '/auth/login',
         data: { ...payload }
       }
       return (await context.$axios(config)).data
@@ -11,7 +11,7 @@ export default (context, inject) => {
     register: async (payload) => {
       const config = {
         method: 'POST',
-        url: '/user/register',
+        url: '/auth/register',
         data: { ...payload }
       }
       return (await context.$axios(config)).data
