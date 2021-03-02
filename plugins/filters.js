@@ -37,5 +37,6 @@ Vue.filter('format_comment_date', function (val) {
 })
 
 Vue.filter('user_initial', function (val) {
+  if (typeof val === 'undefined') { return '' }
   return val.charAt(0).toUpperCase()
 })

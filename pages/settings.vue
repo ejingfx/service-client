@@ -1,5 +1,9 @@
 <template>
-  <div>Settings</div>
+  <v-card
+    class="pa-6"
+  >
+    Settings
+  </v-card>
 </template>
 
 <script>

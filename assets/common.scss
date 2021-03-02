@@ -17,3 +17,10 @@
 .layout-leave-active {
   opacity: 0;
 }
+
+.no-hover {
+  &:before {
+    background-color: none !important;
+    opacity: 0 !important;
+  }
+}

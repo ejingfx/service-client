@@ -63,6 +63,8 @@
             :key="index"
             dense
             flat
+            class="no-hover"
+            @click="$router.push(item.link)"
           >
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
@@ -74,6 +76,7 @@
         >
           <v-list-item
             dense
+            class="no-hover"
             @click="logout()"
           >
             <v-list-item-title>
@@ -99,8 +102,14 @@ export default {
   data () {
     return {
       menu: [
-        { title: 'Profile' },
-        { title: 'Settings' }
+        {
+          title: 'Profile',
+          link: '/profile'
+        },
+        {
+          title: 'Settings',
+          link: '/settings'
+        }
       ]
     }
   },
