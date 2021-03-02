@@ -18,11 +18,14 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
+    'assets/common',
     'assets/_sfi'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    '~/plugins/api.js',
+    '~/plugins/axios.js',
     '~/plugins/filters.js',
     '~/plugins/mixins.js',
     '~/plugins/logger.js',
@@ -52,7 +55,20 @@ export default {
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    proxy: true
+    // baseURL: 'http://localhost:4000/api/v1'
+  },
+
+  proxy: {
+    '/api': 'http://localhost:4000/api'
+  },
+
+  publicRuntimeConfig: {
+    axios: {
+      browserBaseURL: process.env.NUXT_ENV_API_URL
+    }
+  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {

@@ -29,7 +29,7 @@
               color="primary"
               size="36"
             >
-              <span class="white--text">FX</span>
+              <span class="white--text">{{ user.username | user_initial }}</span>
             </v-avatar>
           </v-btn>
         </template>
@@ -37,13 +37,20 @@
           dense
           class="py-0"
         >
-          <v-list-item
-            v-for="item in organization"
-            :key="item._id"
-            dense
-            flat
-          >
-            <v-list-item-title>{{ item.name }}</v-list-item-title>
+          <template v-if="user.organization.length > 0">
+            <v-list-item
+              v-for="item in user.organization"
+              :key="item._id"
+              dense
+              flat
+            >
+              <v-list-item-title>{{ item.name }}</v-list-item-title>
+            </v-list-item>
+          </template>
+          <v-list-item v-else>
+            <v-list-item-title class="grey--text pr-1">
+              <i>No Organization found</i>
+            </v-list-item-title>
           </v-list-item>
         </v-list>
         <v-divider />
@@ -80,6 +87,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'AppHeader',
   props: {
@@ -89,21 +98,14 @@ export default {
   },
   data () {
     return {
-      organization: [
-        {
-          _id: 1,
-          name: 'Organization 1'
-        },
-        {
-          _id: 2,
-          name: 'Organization 2'
-        }
-      ],
       menu: [
         { title: 'Profile' },
         { title: 'Settings' }
       ]
     }
+  },
+  computed: {
+    ...mapState(['user'])
   },
   methods: {
     logout () {

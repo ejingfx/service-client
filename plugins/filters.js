@@ -35,3 +35,7 @@ Vue.filter('format_comment_date', function (val) {
     return moment().from(dt)
   }
 })
+
+Vue.filter('user_initial', function (val) {
+  return val.charAt(0).toUpperCase()
+})

@@ -1,8 +1,8 @@
-const Cookie = require('js-cookie')
-// const Cookie = process.client ? require('js-cookie') : undefined
+const Cookie = process.client ? require('js-cookie') : undefined
 const cookieparser = process.server ? require('cookieparser') : undefined
 
 const state = () => ({
+  user: {},
   authenticated: false,
   token: '',
   organziation: [],
@@ -18,19 +18,18 @@ const actions = {
       const parsed = cookieparser.parse(req.headers.cookie)
       try {
         const obj = JSON.parse(parsed[process.env.NUXT_ENV_COOKIE_NAME])
-        auth = { authenticated: obj.authenticated, token: obj.token }
+        auth = { authenticated: obj.authenticated, ...obj }
       } catch (err) {
-        console.log('err', err)
+
       }
     }
-    console.log('auth', auth)
     commit('setAuth', auth)
   }
 }
 
 const mutations = {
   login (state, payload) {
-    const data = { authenticated: true, token: payload }
+    const data = { authenticated: true, ...payload }
     Object.assign(state, { ...data })
     Cookie.set(process.env.NUXT_ENV_COOKIE_NAME, data)
   },
@@ -45,7 +44,8 @@ const mutations = {
 }
 
 const getters = {
-  getIsAuth: state => state.authenticated,
+  getAuthenticated: state => state.authenticated,
+  getUser: state => state.user,
   getToken: state => state.token
 }
 

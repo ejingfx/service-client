@@ -42,7 +42,9 @@
     />
 
     <v-main class="grey lighten-3">
-      <v-container>
+      <v-container
+        :class="($route.name === 'login' || $route.name === 'register') ? 'fill-height' : ''"
+      >
         <nuxt />
       </v-container>
     </v-main>

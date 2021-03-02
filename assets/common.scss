@@ -1,0 +1,19 @@
+// GLOBAL TRANSITION
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 1s;
+}
+.page-enter,
+.page-leave-to {
+  opacity: 0;
+}
+
+// LAYOUT
+.layout-enter-active,
+.layout-leave-active {
+  transition: opacity 1s;
+}
+.layout-enter,
+.layout-leave-active {
+  opacity: 0;
+}
