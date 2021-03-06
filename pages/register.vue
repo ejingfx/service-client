@@ -171,7 +171,7 @@ export default {
         this.loading = true
         await this.$api
           .register(this.form)
-          .then((response) => {
+          .then(response => {
             if (response.data) {
               this.loading = false
               this.$store.commit('login', response.data)

@@ -8,6 +8,11 @@ import { mapState } from 'vuex'
 export default {
   name: 'Dashboard',
   middleware: ['auth'],
+  head () {
+    return {
+      title: 'Dashboard'
+    }
+  },
   computed: {
     ...mapState(['user'])
   }

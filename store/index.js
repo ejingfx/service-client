@@ -5,7 +5,6 @@ const state = () => ({
   user: {},
   authenticated: false,
   token: '',
-  organziation: [],
   favorites: [],
   pages: [],
   forms: []
@@ -39,6 +38,9 @@ const mutations = {
     Cookie.remove(process.env.NUXT_ENV_COOKIE_NAME)
   },
   setAuth (state, payload) {
+    Object.assign(state, { ...payload })
+  },
+  setOrganization (state, payload) {
     Object.assign(state, { ...payload })
   }
 }

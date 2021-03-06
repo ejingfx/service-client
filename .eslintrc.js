@@ -2,10 +2,12 @@ module.exports = {
   root: true,
   env: {
     browser: true,
-    node: true
+    node: true,
+    es6: true
   },
   parserOptions: {
-    parser: 'babel-eslint'
+    parser: 'babel-eslint',
+    ecmaVersion: 6
   },
   extends: [
     '@nuxtjs',
@@ -13,5 +15,7 @@ module.exports = {
   ],
   plugins: [],
   // add your custom rules here
-  rules: {}
+  rules: {
+    'arrow-parens': [2, 'as-needed']
+  }
 }

@@ -1,6 +1,6 @@
 export default (context, inject) => {
   /* eslint-disable no-debugger, no-console */
-  const logger = (msg) => {
+  const logger = msg => {
     const type = typeof msg
 
     switch (type) {

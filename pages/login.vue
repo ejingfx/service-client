@@ -138,9 +138,10 @@ export default {
         this.loading = true
         await this.$api
           .login(this.form)
-          .then((response) => {
+          .then(response => {
             if (response.data) {
               this.loading = false
+              console.log('lg', response.data)
               this.$store.commit('login', response.data)
               this.$router.push({ name: 'dashboard' })
             } else if (response.errors) {

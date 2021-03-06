@@ -45,10 +45,6 @@
       <v-container
         :class="($route.name === 'login' || $route.name === 'register') ? 'fill-height' : 'container--fluid'"
       >
-        <Breadcrumbs
-          v-if="authenticated"
-          class="px-1"
-        />
         <nuxt class="px-1" />
       </v-container>
     </v-main>
@@ -59,7 +55,6 @@
 import { mapState } from 'vuex'
 import _ from 'lodash'
 import AppHeader from '@/components/AppHeader'
-import Breadcrumbs from '@/components/Breadcrumbs'
 import UserInfoDrawer from '@/components/UserInfoDrawer'
 import NavDrawer from '@/components/NavDrawer'
 import FavoritesDrawer from '@/components/FavoritesDrawer'
@@ -70,7 +65,6 @@ import Invite from '@/components/Invite'
 export default {
   components: {
     AppHeader,
-    Breadcrumbs,
     UserInfoDrawer,
     NavDrawer,
     FavoritesDrawer,
@@ -81,6 +75,7 @@ export default {
   data () {
     return {
       drawer: true,
+      drawerInfo: true,
       drawerTracker: {
         group: 0,
         top: 0,
