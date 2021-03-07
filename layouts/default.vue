@@ -48,6 +48,19 @@
         <nuxt class="px-1" />
       </v-container>
     </v-main>
+
+    <v-navigation-drawer
+      v-if="authenticated & drawerInfo"
+      id="drawer-info-container"
+      v-model="drawerInfo"
+      width="40%"
+      fixed
+      clipped
+      right
+      mobile-breakpoint="1200"
+    >
+      asdf
+    </v-navigation-drawer>
   </v-app>
 </template>
 
@@ -75,7 +88,7 @@ export default {
   data () {
     return {
       drawer: true,
-      drawerInfo: true,
+      drawerInfo: false,
       drawerTracker: {
         group: 0,
         top: 0,

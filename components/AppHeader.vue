@@ -33,7 +33,10 @@
           </v-avatar>
         </v-btn>
       </template>
-      <v-list flat>
+      <v-list
+        flat
+        style="min-width: 160px;"
+      >
         <v-list-item
           v-for="item in items"
           :key="item.title"
