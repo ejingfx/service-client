@@ -175,7 +175,7 @@ export default {
       menu: [
         {
           title: 'Profile',
-          link: '/profile'
+          link: '/settings/profile'
         },
         {
           title: 'Settings',

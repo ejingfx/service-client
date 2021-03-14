@@ -141,7 +141,7 @@ export default {
       },
       rules: {
         username: [
-          value => !!value || 'Email is required',
+          value => !!value || 'Username is required',
           value => value.trim().length > 3 || 'Minimum of 3 characters'
         ],
         email: [
@@ -154,7 +154,7 @@ export default {
         ],
         confirm: [
           value => !!value || 'Please confirm your password',
-          value => this.form.password === value || 'Confirm doesn\'t match password'
+          value => this.form.password === value || 'Password doesn\'t match'
         ]
       }
     }

@@ -40,3 +40,23 @@ Vue.filter('user_initial', function (val) {
   if (typeof val === 'undefined') { return '' }
   return val.charAt(0).toUpperCase()
 })
+
+Vue.filter('format_snackbar', function (val) {
+  if (typeof val === 'undefined') { return '' }
+
+  if (typeof val === 'object') {
+    let messages = ''
+    Object.keys(val).forEach((key, i) => {
+      let sep = ''
+      if (Object.keys(val).length - 1 === i) {
+        sep = '.'
+      } else {
+        sep = ' &'
+      }
+      messages += `${val[key].message.charAt(0).toUpperCase() + val[key].message.slice(1)}${sep} `
+    })
+    return messages
+  } else {
+    return val
+  }
+})

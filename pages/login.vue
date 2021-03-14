@@ -141,7 +141,6 @@ export default {
           .then(response => {
             if (response.data) {
               this.loading = false
-              console.log('lg', response.data)
               this.$store.commit('login', response.data)
               this.$router.push({ name: 'dashboard' })
             } else if (response.errors) {
