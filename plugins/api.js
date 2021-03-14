@@ -1,4 +1,12 @@
 export default (context, inject) => {
+  const changePassword = async payload => {
+    const config = {
+      method: 'POST',
+      url: '/auth/change-password',
+      data: { ...payload }
+    }
+    return (await context.$axios(config)).data
+  }
   const updateAccount = async (id, payload) => {
     const config = {
       method: 'PUT',
@@ -64,6 +72,7 @@ export default (context, inject) => {
     getAllOrganization,
     getOrganization,
     getProfile,
+    changePassword,
     updateAccount,
     updateProfile,
     login,

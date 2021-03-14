@@ -57,6 +57,6 @@ Vue.filter('format_snackbar', function (val) {
     })
     return messages
   } else {
-    return val
+    return `${val}.`
   }
 })

@@ -90,7 +90,7 @@
                     </v-col>
                     <v-col cols="6">
                       <v-text-field
-                        v-model="password.current"
+                        v-model="credentialForm.current"
                         :type="showPassword ? 'text' : 'password'"
                         :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                         :rules="rules.password"
@@ -99,7 +99,7 @@
                         @click:append="showPassword = !showPassword"
                       />
                       <v-text-field
-                        v-model="password.new"
+                        v-model="credentialForm.new"
                         :type="showNewPassword ? 'text' : 'password'"
                         :append-icon="showNewPassword ? 'mdi-eye' : 'mdi-eye-off'"
                         :rules="rules.newPassword"
@@ -108,7 +108,7 @@
                         @click:append="showNewPassword = !showNewPassword"
                       />
                       <v-text-field
-                        v-model="password.confirm"
+                        v-model="confirmPassword"
                         :type="showConfirmPassword ? 'text' : 'password'"
                         :append-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
                         :rules="rules.confirm"
@@ -156,7 +156,7 @@
           icon
           text
           v-bind="attrs"
-          @click="snackbar.visible = false"
+          @click="snackbar.show = false"
         >
           <v-icon>mdi-close</v-icon>
         </v-btn>
@@ -190,11 +190,11 @@ export default {
         email: '',
         workspace: ''
       },
-      password: {
+      credentialForm: {
         current: '',
-        new: '',
-        confirm: ''
+        new: ''
       },
+      confirmPassword: '',
       snackbar: {
         show: false,
         message: '',
@@ -218,7 +218,7 @@ export default {
         ],
         confirm: [
           value => value.trim().length >= 6 || 'Minimum of 6 characters',
-          value => this.password.confirm === value || 'Password doesn\'t match.'
+          value => this.credentialForm.new === value || 'New Password doesn\'t match.'
         ]
       }
     }
@@ -245,37 +245,67 @@ export default {
       if (form === 'basicForm') {
         this.basicForm = { ...this.basicInit }
       } else if (form === 'credentialForm') {
-        this.password = {
+        this.credentialForm = {
           current: '',
-          new: '',
-          confirm: ''
+          new: ''
         }
+        this.confirmPassword = ''
       }
     },
     async validate (form) {
       if (this.$refs[form].validate()) {
         this.buttons[form] = true
-        await this.$api
-          .updateAccount(this.user.id, this.basicForm)
-          .then(response => {
-            if (response.data) {
-              this.buttons[form] = false
-              const snackbar = {
-                show: true,
-                message: 'Saved Successfully.',
-                color: 'success'
+
+        if (form === 'basicForm') {
+          await this.$api
+            .updateAccount(this.user.id, this[form])
+            .then(response => {
+              if (response.data) {
+                this.buttons[form] = false
+                const snackbar = {
+                  show: true,
+                  message: 'Saved Successfully.',
+                  color: 'success'
+                }
+                this.snackbar = { ...snackbar }
+              } else if (response.errors) {
+                this.buttons[form] = false
+                const snackbar = {
+                  show: true,
+                  message: response.errors,
+                  color: 'error'
+                }
+                this.snackbar = { ...snackbar }
               }
-              this.snackbar = { ...snackbar }
-            } else if (response.errors) {
-              this.buttons[form] = false
-              const snackbar = {
-                show: true,
-                message: response.errors,
-                color: 'error'
+            })
+        } else {
+          const payload = {
+            ...this[form],
+            id: this.user.id
+          }
+          await this.$api
+            .changePassword(payload)
+            .then(response => {
+              if (response.data) {
+                this.buttons[form] = false
+                const snackbar = {
+                  show: true,
+                  message: response.data.message,
+                  color: 'success'
+                }
+                this.snackbar = { ...snackbar }
+                this.reset(form)
+              } else if (response.errors) {
+                this.buttons[form] = false
+                const snackbar = {
+                  show: true,
+                  message: response.errors.message,
+                  color: 'error'
+                }
+                this.snackbar = { ...snackbar }
               }
-              this.snackbar = { ...snackbar }
-            }
-          })
+            })
+        }
       }
     }
   }

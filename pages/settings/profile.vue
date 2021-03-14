@@ -10,8 +10,8 @@
         </h2>
         <v-card class="mb-4">
           <v-form
-            ref="form"
-            @submit.prevent="validate"
+            ref="profileForm"
+            @submit.prevent="validate('profileForm')"
           >
             <v-list>
               <v-list-item>
@@ -88,26 +88,6 @@
                         placeholder="Address"
                         :rules="rules.address"
                       />
-                    </v-col>
-                  </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
-                    <v-col cols="6">
-                      Contact
-                    </v-col>
-                  </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
-                    <v-col cols="6">
-                      SNS
-                    </v-col>
-                    <v-col cols="6">
                       <v-btn
                         type="button"
                         @click="reset"
@@ -129,24 +109,61 @@
             </v-list>
           </v-form>
         </v-card>
+        <h2 class="title">
+          Contacts
+        </h2>
+        <v-card class="mb-4">
+          <v-form
+            ref="contactForm"
+            @submit.prevent="validate('contactForm')"
+          >
+            <v-list>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-data-table
+                        :headers="contactHeader"
+                        :items="contacts"
+                        hide-default-footer
+                      >
+                        <template #[`item.actions`]="{ item }">
+                          <v-btn
+                            icon
+                            small
+                            @click="deleteItem(item)"
+                          >
+                            <v-icon>
+                              mdi-delete
+                            </v-icon>
+                          </v-btn>
+                        </template>
+                      </v-data-table>
+                    </v-col>
+                  </v-row>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-form>
+        </v-card>
       </v-col>
     </v-row>
     <v-snackbar
-      v-model="snackbar.visible"
+      v-model="snackbar.show"
       :timeout="3000"
       :color="snackbar.color"
       fixed
       bottom
       text
     >
-      Saved Successfully.
+      {{ snackbar.message | format_snackbar }}
       <template #action="{ attrs }">
         <v-btn
           icon
           :color="snackbar.color"
           text
           v-bind="attrs"
-          @click="snackbar.visible = false"
+          @click="snackbar.show = false"
         >
           <v-icon>mdi-close</v-icon>
         </v-btn>
@@ -172,7 +189,7 @@ export default {
   data () {
     return {
       snackbar: {
-        visible: false,
+        show: false,
         message: '',
         color: 'success'
       },
@@ -199,12 +216,65 @@ export default {
         ],
         address: [
           value => value.length <= 200 || 'Max of 200 characters'
+        ],
+        contactName: [
+          value => !!value || 'Name is required'
+        ],
+        contactNumber: [
+          value => !!value || 'Number is required'
         ]
       },
       gender: [
         'Male',
         'Female'
       ],
+      contactForm: {
+        contactType: 'landline',
+        name: '',
+        number: null
+      },
+      contacts: [],
+      contactHeader: [
+        {
+          text: 'Type',
+          align: 'start',
+          sortable: false,
+          value: 'contactType'
+        },
+        {
+          text: 'Name',
+          align: 'start',
+          sortable: false,
+          value: 'name'
+        },
+        {
+          text: 'Number',
+          align: 'start',
+          sortable: false,
+          value: 'number'
+        },
+        {
+          text: 'Actions',
+          align: 'center',
+          sortable: false,
+          value: 'actions'
+        }
+      ],
+      contactType: [
+        {
+          text: 'Landline',
+          value: 'landline'
+        },
+        {
+          text: 'Mobile',
+          value: 'mobile'
+        }
+      ],
+      snsForm: {
+        name: '',
+        number: null
+      },
+      sns: [],
       menu: false,
       date: null
     }
@@ -215,35 +285,62 @@ export default {
     }
   },
   computed: {
-    ...mapState(['user'])
+    ...mapState(['user']),
+    getContacts () { return this.contacts }
   },
   mounted () {
     this.profileInit = { ...this.profile }
+    this.contacts = this.profile.contact
+    this.sns = this.profile.sns
   },
   methods: {
-    reset () {
-      this.$refs.form.resetValidation()
-      this.profile = { ...this.profileInit }
+    deleteItem (item) {
+      this.contacts.splice(this.contacts.indexOf(item), 1)
+      this.validate('contactForm', true)
     },
-    async validate () {
-      if (this.$refs.form.validate()) {
+    reset (form) {
+      this.$refs[form].resetValidation()
+      this.profile = { ...this.profileInit }
+
+      if (form === 'contactForm') {
+        this.contactForm = {
+          name: '',
+          contactType: 'landline',
+          number: null
+        }
+      }
+    },
+    async validate (form, deleteContact = false) {
+      if (this.$refs[form].validate()) {
+        let payload = {}
         this.loading = true
+
+        if (form === 'profileForm') {
+          payload = { ...this.profile }
+        } else if (form === 'contactForm' && deleteContact) {
+          payload = { contact: this.contacts }
+        } else {
+          this.contacts.push({ ...this[form] })
+          payload = { contact: this.contacts }
+        }
         await this.$api
-          .updateProfile(this.user.username, this.profile)
+          .updateProfile(this.user.username, payload)
           .then(response => {
-            console.log('aaa', response)
             if (response.data) {
               const snackbar = {
-                visible: true,
-                message: 'Saved Successfully.',
+                show: true,
+                message: 'Saved Successfully',
                 color: 'success'
               }
               this.loading = false
               this.snackbar = { ...snackbar }
+              this.profile = { ...response.data }
+              this.profileInit = { ...this.profile }
+              this.reset(form)
             } else if (response.errors) {
               const snackbar = {
-                visible: true,
-                message: 'Something went wrong, unable to save.',
+                show: true,
+                message: response.errors,
                 color: 'error'
               }
               this.loading = false
@@ -253,8 +350,8 @@ export default {
           .catch(() => {
             this.loading = false
             this.snackbar = {
-              visible: true,
-              message: 'Something went wrong, unable to save.',
+              show: true,
+              message: 'Something went wrong, unable to save',
               color: 'error'
             }
           })
