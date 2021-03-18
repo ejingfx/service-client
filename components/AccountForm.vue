@@ -24,25 +24,6 @@
                   filled
                   placeholder="Email"
                 />
-              </v-col>
-            </v-row>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item>
-          <v-list-item-content>
-            <v-row class="mt-1">
-              <v-col cols="6">
-                Workspace
-              </v-col>
-              <v-col cols="6">
-                <v-select
-                  v-model="form.workspace"
-                  placeholder="Select Workspace"
-                  filled
-                  :items="account.organization"
-                  item-text="name"
-                  item-value="_id"
-                />
                 <v-btn
                   type="button"
                   @click.stop="reset"
@@ -131,11 +112,15 @@ export default {
           .then(response => {
             if (response.data) {
               this.loading = false
-              this.$emit('saved', {
-                data: response.data,
-                snackbar: this.snackbar.saved
-              })
-              console.log('response.data', response.data)
+              const cookiePayload = {
+                $cookies: this.$cookies,
+                data: {
+                  key: 'user',
+                  value: response.data.user
+                }
+              }
+              this.$store.dispatch('COOKIE_UPDATE', cookiePayload)
+              this.$store.dispatch('SET_SNACKBAR', { snackbar: snackbar.saved })
             } else if (response.errors) {
               this.loading = false
               this.$emit('error', {
@@ -148,9 +133,7 @@ export default {
           })
           .catch(() => {
             this.loading = false
-            this.$emit('error', {
-              snackbar: this.snackbar.error
-            })
+            this.$store.dispatch('SET_SNACKBAR', { snackbar: this.snackbar.error })
           })
       }
     }

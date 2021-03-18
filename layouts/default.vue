@@ -61,6 +61,29 @@
     >
       asdf
     </v-navigation-drawer>
+
+    <v-snackbar
+      v-model="snackbar.show"
+      timeout="-1"
+      :color="snackbar.color"
+      fixed
+      bottom
+      text
+      multi-line
+    >
+      {{ snackbar.message | format_snackbar }}
+      <template #action="{ attrs }">
+        <v-btn
+          :color="snackbar.color"
+          icon
+          text
+          v-bind="attrs"
+          @click="dismiss"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -76,6 +99,7 @@ import FormsDrawer from '@/components/FormsDrawer'
 import Invite from '@/components/Invite'
 
 export default {
+  name: 'default',
   components: {
     AppHeader,
     UserInfoDrawer,
@@ -101,13 +125,19 @@ export default {
     title: 'Login'
   },
   computed: {
-    ...mapState(['authenticated']),
+    ...mapState([
+      'authenticated',
+      'snackbar'
+    ]),
     getDrawerTracker () { return this.drawerTracker }
   },
   mounted () {
     this.drawerGroupHandler()
   },
   methods: {
+    dismiss () {
+      this.$store.dispatch('DISMISS_SNACKBAR')
+    },
     setDrawerTracker (val) {
       this.drawerTracker = { ...val }
       this.resizeDrawer()

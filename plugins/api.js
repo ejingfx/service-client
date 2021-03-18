@@ -25,6 +25,15 @@ export default (context, inject) => {
     return (await context.$axios(config)).data
   }
 
+  const setWorkspace = async (id, workspaceId) => {
+    const config = {
+      method: 'PUT',
+      url: `${process.env.NUXT_ENV_API_URL}/user/workspace`,
+      data: { id, workspace: workspaceId }
+    }
+    return (await context.$axios(config)).data
+  }
+
   const getProfile = async username => {
     const config = {
       method: 'GET',
@@ -69,14 +78,15 @@ export default (context, inject) => {
   }
 
   const api = {
+    changePassword,
     getAllOrganization,
     getOrganization,
     getProfile,
-    changePassword,
-    updateAccount,
-    updateProfile,
     login,
-    register
+    register,
+    setWorkspace,
+    updateAccount,
+    updateProfile
   }
 
   inject('api', api)

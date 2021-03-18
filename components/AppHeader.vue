@@ -89,6 +89,37 @@
         <v-list
           dense
           class="py-0"
+          style="min-width: 160px;"
+        >
+          <template v-if="user.workspace !== ''">
+            <v-list-item
+              v-for="(item, i) in organizations"
+              :key="i"
+              dense
+              flat
+              @click.stop="setWorkspace(item)"
+            >
+              <v-list-item-title>{{ item.name | capitalize }}</v-list-item-title>
+              <v-list-item-action>
+                <v-icon
+                  v-if="item._id === user.workspace"
+                  small
+                >
+                  mdi-check
+                </v-icon>
+              </v-list-item-action>
+            </v-list-item>
+          </template>
+          <v-list-item v-else>
+            <v-list-item-title class="grey--text pr-1">
+              <i>No Selected Workspace</i>
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+        <v-divider />
+        <v-list
+          dense
+          class="py-0"
         >
           <v-list-item
             v-for="(item, index) in menu"
@@ -124,6 +155,7 @@
 <script>
 import { mapState } from 'vuex'
 import AppSearch from '@/components/AppSearch'
+import { snackbar } from '@/constants'
 
 export default {
   name: 'AppHeader',
@@ -161,13 +193,51 @@ export default {
           title: 'Settings',
           link: '/settings'
         }
-      ]
+      ],
+      snackbar
     }
   },
   computed: {
-    ...mapState(['user'])
+    ...mapState([
+      'user',
+      'organizations'
+    ])
   },
   methods: {
+    getWorkspace (id) {
+      return this.organizations
+        .filter(item => item._id === id)[0].name
+    },
+    async setWorkspace (item) {
+      await this.$api
+        .setWorkspace(this.user.id, item._id)
+        .then(response => {
+          if (response.data) {
+            const cookiePayload = {
+              $cookies: this.$cookies,
+              data: {
+                key: 'workspace',
+                value: response.data
+              }
+            }
+            this.$store.dispatch('SET_WORKSPACE', response.data)
+            this.$store.dispatch('COOKIE_UPDATE', cookiePayload)
+            this.$store.dispatch('SET_SNACKBAR', {
+              snackbar: {
+                ...snackbar.saved,
+                ...{ message: 'Switching Workspace' }
+              }
+            })
+          } else if (response.errors) {
+            this.$store.dispatch('SET_SNACKBAR', {
+              snackbar: {
+                ...snackbar.error,
+                ...{ message: response.errors }
+              }
+            })
+          }
+        })
+    },
     logout () {
       this.$store.commit('logout')
       this.$router.push({ name: 'login' })

@@ -6,16 +6,14 @@
       </v-col>
       <v-col cols="9">
         <h2 class="title">
-          Basic Information
+          Account Information
         </h2>
-        <AccountForm
-          :account="user"
-          @error="snackbar = { ...$event.snackbar }"
-          @saved="snackbar = { ...$event.snackbar }, reInit($event.data)"
-        />
+        <AccountForm :account="user" />
+
         <h2 class="title">
           Credentials
         </h2>
+        <AccessForm />
       </v-col>
     </v-row>
     <v-snackbar
@@ -46,6 +44,7 @@
 <script>
 import SettingsRoutes from '@/components/SettingsRoutes'
 import AccountForm from '@/components/AccountForm'
+import AccessForm from '@/components/AccessForm'
 import { mapState } from 'vuex'
 import { snackbar } from '@/constants'
 
@@ -53,12 +52,12 @@ export default {
   name: 'AccountSettings',
   components: {
     SettingsRoutes,
-    AccountForm
+    AccountForm,
+    AccessForm
   },
   middleware: ['auth'],
   data () {
     return {
-      organization: [],
       snackbar
     }
   },
@@ -69,19 +68,6 @@ export default {
   },
   computed: {
     ...mapState(['user'])
-  },
-  methods: {
-    reInit (data) {
-      const COOKIE_NAME = process.env.NUXT_ENV_COOKIE_NAME
-      const CURRENT = this.$cookies.get(COOKIE_NAME)
-      const payload = { ...CURRENT, ...{ user: data } }
-      this.$cookies.set(COOKIE_NAME, payload)
-      this.$store.commit('updateCookie', payload)
-    }
-  },
-  mounted () {
-    const name = process.env.NUXT_ENV_COOKIE_NAME
-    console.log('app', this.$cookies.get(name))
   }
 }
 </script>
