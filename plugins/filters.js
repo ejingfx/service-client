@@ -1,7 +1,19 @@
 import Vue from 'vue'
 import _ from 'lodash'
 import moment from 'moment'
+import { sns } from '@/constants'
 moment.suppressDeprecationWarnings = true
+
+Vue.filter('date', function (val) {
+  if (_.isNull(val) || _.isUndefined(val)) {
+    return ''
+  } else {
+    const str = val.split(' ')[0].concat('T').concat(val.split(' ')[1])
+    const dt = moment().format(str, 'YYYY-MM-DD')
+
+    return moment(dt, 'YYYY-MM-DD').format('LL')
+  }
+})
 
 Vue.filter('format_date', function (val) {
   if (_.isNull(val) || _.isUndefined(val)) {
@@ -58,5 +70,24 @@ Vue.filter('format_snackbar', function (val) {
     return messages
   } else {
     return `${val}.`
+  }
+})
+
+Vue.filter('snsIcon', function (val) {
+  if (_.isNull(val) || _.isUndefined(val)) {
+    return ''
+  }
+
+  let icon = ''
+  sns.forEach(function (item, i) {
+    if (val.includes(item)) {
+      icon = `mdi-${sns[i]}`
+    }
+  })
+
+  if (icon === '') {
+    return 'mdi-web'
+  } else {
+    return icon
   }
 })

@@ -2,27 +2,28 @@ const Cookie = process.client ? require('js-cookie') : undefined
 const cookieparser = process.server ? require('cookieparser') : undefined
 
 const state = () => ({
-  user: {},
   authenticated: false,
-  token: '',
   favorites: [],
+  forms: [],
   pages: [],
-  forms: []
+  token: '',
+  user: {}
 })
 
 const actions = {
   nuxtServerInit ({ commit }, { req }) {
-    let auth = null
+    let data = null
     if (req.headers.cookie) {
       const parsed = cookieparser.parse(req.headers.cookie)
       try {
         const obj = JSON.parse(parsed[process.env.NUXT_ENV_COOKIE_NAME])
-        auth = { authenticated: obj.authenticated, ...obj }
+        data = { authenticated: obj.authenticated, ...obj }
       } catch (err) {
-
+        // eslint-disable-next-line no-console
+        console.log(err)
       }
     }
-    commit('setAuth', auth)
+    commit('setInit', data)
   }
 }
 
@@ -37,8 +38,11 @@ const mutations = {
     Object.assign(state, { ...data })
     Cookie.remove(process.env.NUXT_ENV_COOKIE_NAME)
   },
-  setAuth (state, payload) {
-    Object.assign(state, { ...payload })
+  setInit (state, payload) {
+    state = Object.assign({}, { ...payload })
+  },
+  updateCookie (state, payload) {
+    Object.assign(state, payload)
   },
   setOrganization (state, payload) {
     Object.assign(state, { ...payload })

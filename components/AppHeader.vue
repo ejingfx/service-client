@@ -89,26 +89,6 @@
         <v-list
           dense
           class="py-0"
-          style="min-width: 160px;"
-        >
-          <template v-if="user.workspace.length > 0">
-            <v-list-item
-              dense
-              flat
-            >
-              <v-list-item-title>{{ getWorkspace(user.workspace) | capitalize }}</v-list-item-title>
-            </v-list-item>
-          </template>
-          <v-list-item v-else>
-            <v-list-item-title class="grey--text pr-1">
-              <i>No Selected Workspace</i>
-            </v-list-item-title>
-          </v-list-item>
-        </v-list>
-        <v-divider />
-        <v-list
-          dense
-          class="py-0"
         >
           <v-list-item
             v-for="(item, index) in menu"
@@ -188,10 +168,6 @@ export default {
     ...mapState(['user'])
   },
   methods: {
-    getWorkspace (id) {
-      return this.user.organization
-        .filter(item => item._id === id)[0].name
-    },
     logout () {
       this.$store.commit('logout')
       this.$router.push({ name: 'login' })

@@ -8,142 +8,20 @@
         <h2 class="title">
           Basic Information
         </h2>
-        <v-card class="mb-4">
-          <v-form
-            ref="basicForm"
-            @submit.prevent="validate('basicForm')"
-          >
-            <v-list>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
-                    <v-col cols="6">
-                      User
-                    </v-col>
-                    <v-col cols="6">
-                      <v-text-field
-                        v-model="basicForm.username"
-                        :rules="rules.username"
-                        placeholder="Username"
-                        filled
-                      />
-                      <v-text-field
-                        v-model="basicForm.email"
-                        :rules="rules.email"
-                        filled
-                        placeholder="Email"
-                      />
-                    </v-col>
-                  </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row class="mt-1">
-                    <v-col cols="6">
-                      Workspace
-                    </v-col>
-                    <v-col cols="6">
-                      <v-select
-                        v-model="basicForm.workspace"
-                        placeholder="Select Workspace"
-                        filled
-                        :items="user.organization"
-                        item-text="name"
-                        item-value="_id"
-                      />
-                      <v-btn
-                        type="button"
-                        @click="reset('basicForm')"
-                      >
-                        RESET
-                      </v-btn>
-                      <v-btn
-                        type="submit"
-                        color="primary"
-                        :disabled="buttons.basicForm"
-                        :loading="buttons.basicForm"
-                      >
-                        SAVE
-                      </v-btn>
-                    </v-col>
-                  </v-row>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-          </v-form>
-        </v-card>
+        <AccountForm
+          :account="user"
+          @error="snackbar = { ...$event.snackbar }"
+          @saved="snackbar = { ...$event.snackbar }, reInit($event.data)"
+        />
         <h2 class="title">
           Credentials
         </h2>
-        <v-card>
-          <v-form
-            ref="credentialForm"
-            @submit.prevent="validate('credentialForm')"
-          >
-            <v-list>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row class="mt-1">
-                    <v-col cols="6">
-                      Password
-                    </v-col>
-                    <v-col cols="6">
-                      <v-text-field
-                        v-model="credentialForm.current"
-                        :type="showPassword ? 'text' : 'password'"
-                        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                        :rules="rules.password"
-                        filled
-                        placeholder="Current Password"
-                        @click:append="showPassword = !showPassword"
-                      />
-                      <v-text-field
-                        v-model="credentialForm.new"
-                        :type="showNewPassword ? 'text' : 'password'"
-                        :append-icon="showNewPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                        :rules="rules.newPassword"
-                        filled
-                        placeholder="Enter New Password"
-                        @click:append="showNewPassword = !showNewPassword"
-                      />
-                      <v-text-field
-                        v-model="confirmPassword"
-                        :type="showConfirmPassword ? 'text' : 'password'"
-                        :append-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                        :rules="rules.confirm"
-                        filled
-                        placeholder="Confirm New Password"
-                        @click:append="showConfirmPassword = !showConfirmPassword"
-                      />
-                      <v-btn
-                        type="button"
-                        @click="reset('credentialForm')"
-                      >
-                        RESET
-                      </v-btn>
-                      <v-btn
-                        type="submit"
-                        color="primary"
-                        :disabled="buttons.credentialForm"
-                        :loading="buttons.credentialForm"
-                      >
-                        SAVE
-                      </v-btn>
-                    </v-col>
-                  </v-row>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-          </v-form>
-        </v-card>
       </v-col>
     </v-row>
     <v-snackbar
       v-model="snackbar.show"
       :timeout="5000"
       :color="snackbar.color"
-      :messages.sync="snackbar.message"
       fixed
       bottom
       text
@@ -167,60 +45,21 @@
 
 <script>
 import SettingsRoutes from '@/components/SettingsRoutes'
+import AccountForm from '@/components/AccountForm'
 import { mapState } from 'vuex'
+import { snackbar } from '@/constants'
 
 export default {
   name: 'AccountSettings',
   components: {
-    SettingsRoutes
+    SettingsRoutes,
+    AccountForm
   },
+  middleware: ['auth'],
   data () {
     return {
-      loading: false,
-      buttons: {
-        basicForm: false,
-        credentialForm: false
-      },
-      showPassword: false,
-      showNewPassword: false,
-      showConfirmPassword: false,
-      basicInit: {},
-      basicForm: {
-        username: '',
-        email: '',
-        workspace: ''
-      },
-      credentialForm: {
-        current: '',
-        new: ''
-      },
-      confirmPassword: '',
-      snackbar: {
-        show: false,
-        message: '',
-        color: 'success'
-      },
       organization: [],
-      rules: {
-        username: [
-          value => !!value || 'Username is required',
-          value => value.trim().length > 3 || 'Minimum of 3 characters'
-        ],
-        email: [
-          value => !!value || 'Email is required',
-          value => /.+@.+\..+/.test(value) || 'E-mail must be valid'
-        ],
-        password: [
-          value => value.trim().length >= 6 || 'Minimum of 6 characters'
-        ],
-        newPassword: [
-          value => value.trim().length >= 6 || 'Minimum of 6 characters'
-        ],
-        confirm: [
-          value => value.trim().length >= 6 || 'Minimum of 6 characters',
-          value => this.credentialForm.new === value || 'New Password doesn\'t match.'
-        ]
-      }
+      snackbar
     }
   },
   head () {
@@ -231,83 +70,18 @@ export default {
   computed: {
     ...mapState(['user'])
   },
-  mounted () {
-    this.basicForm = {
-      username: this.user.username,
-      email: this.user.email,
-      workspace: this.user.workspace
-    }
-    this.basicInit = { ...this.basicForm }
-  },
   methods: {
-    reset (form) {
-      this.$refs[form].resetValidation()
-      if (form === 'basicForm') {
-        this.basicForm = { ...this.basicInit }
-      } else if (form === 'credentialForm') {
-        this.credentialForm = {
-          current: '',
-          new: ''
-        }
-        this.confirmPassword = ''
-      }
-    },
-    async validate (form) {
-      if (this.$refs[form].validate()) {
-        this.buttons[form] = true
-
-        if (form === 'basicForm') {
-          await this.$api
-            .updateAccount(this.user.id, this[form])
-            .then(response => {
-              if (response.data) {
-                this.buttons[form] = false
-                const snackbar = {
-                  show: true,
-                  message: 'Saved Successfully.',
-                  color: 'success'
-                }
-                this.snackbar = { ...snackbar }
-              } else if (response.errors) {
-                this.buttons[form] = false
-                const snackbar = {
-                  show: true,
-                  message: response.errors,
-                  color: 'error'
-                }
-                this.snackbar = { ...snackbar }
-              }
-            })
-        } else {
-          const payload = {
-            ...this[form],
-            id: this.user.id
-          }
-          await this.$api
-            .changePassword(payload)
-            .then(response => {
-              if (response.data) {
-                this.buttons[form] = false
-                const snackbar = {
-                  show: true,
-                  message: response.data.message,
-                  color: 'success'
-                }
-                this.snackbar = { ...snackbar }
-                this.reset(form)
-              } else if (response.errors) {
-                this.buttons[form] = false
-                const snackbar = {
-                  show: true,
-                  message: response.errors.message,
-                  color: 'error'
-                }
-                this.snackbar = { ...snackbar }
-              }
-            })
-        }
-      }
+    reInit (data) {
+      const COOKIE_NAME = process.env.NUXT_ENV_COOKIE_NAME
+      const CURRENT = this.$cookies.get(COOKIE_NAME)
+      const payload = { ...CURRENT, ...{ user: data } }
+      this.$cookies.set(COOKIE_NAME, payload)
+      this.$store.commit('updateCookie', payload)
     }
+  },
+  mounted () {
+    const name = process.env.NUXT_ENV_COOKIE_NAME
+    console.log('app', this.$cookies.get(name))
   }
 }
 </script>
