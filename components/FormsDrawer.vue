@@ -28,12 +28,16 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'FormsDrawer',
   data () {
     return {
-      forms: []
     }
+  },
+  computed: {
+    ...mapState(['forms'])
   }
 }
 </script>

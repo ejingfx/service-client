@@ -16,28 +16,6 @@
         <AccessForm />
       </v-col>
     </v-row>
-    <v-snackbar
-      v-model="snackbar.show"
-      :timeout="5000"
-      :color="snackbar.color"
-      fixed
-      bottom
-      text
-      multi-line
-    >
-      {{ snackbar.message | format_snackbar }}
-      <template #action="{ attrs }">
-        <v-btn
-          :color="snackbar.color"
-          icon
-          text
-          v-bind="attrs"
-          @click="snackbar.show = false"
-        >
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </template>
-    </v-snackbar>
   </v-container>
 </template>
 

@@ -93,8 +93,7 @@ export default {
         current: false,
         confirm: false,
         new: false
-      },
-      snackbar
+      }
     }
   },
   computed: {
@@ -123,28 +122,22 @@ export default {
           .then(response => {
             if (response.data) {
               this.loading = false
-              this.$emit('saved', {
-                snackbar: {
-                  ...this.snackbar.saved,
-                  ...{ message: response.data.message }
-                }
+              this.$store.dispatch('SET_SNACKBAR', {
+                ...snackbar.saved,
+                ...{ message: response.data.message }
               })
               this.reset()
             } else if (response.errors) {
               this.loading = false
-              this.$emit('error', {
-                snackbar: {
-                  ...this.snackbar.error,
-                  ...{ message: response.errors }
-                }
+              this.$store.dispatch('SET_SNACKBAR', {
+                ...snackbar.error,
+                ...{ message: response.errors }
               })
             }
           })
           .catch(() => {
             this.loading = false
-            this.$emit('error', {
-              snackbar: this.snackbar.error
-            })
+            this.$store.dispatch('SET_SNACKBAR', snackbar.error)
           })
       }
     }

@@ -10,48 +10,24 @@
         </h2>
         <ProfileForm
           :profile="profile"
-          @error="snackbar = { ...$event.snackbar }"
-          @saved="snackbar = { ...$event.snackbar }, reInit($event.data)"
+          @saved="reInit($event.data)"
         />
         <h2 class="title">
           Contact Information
         </h2>
         <ContactForm
           :contact="profile.contact"
-          @error="snackbar = { ...$event.snackbar }"
-          @saved="snackbar = { ...$event.snackbar }, reInit($event.data)"
+          @saved="reInit($event.data)"
         />
         <h2 class="title">
           Social Media
         </h2>
         <SnsForm
           :sns="profile.sns"
-          @error="snackbar = { ...$event.snackbar }"
-          @saved="snackbar = { ...$event.snackbar }, reInit($event.data)"
+          @saved="reInit($event.data)"
         />
       </v-col>
     </v-row>
-    <v-snackbar
-      v-model="snackbar.show"
-      :timeout="3000"
-      :color="snackbar.color"
-      fixed
-      bottom
-      text
-    >
-      {{ snackbar.message | format_snackbar }}
-      <template #action="{ attrs }">
-        <v-btn
-          icon
-          :color="snackbar.color"
-          text
-          v-bind="attrs"
-          @click="snackbar.show = false"
-        >
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </template>
-    </v-snackbar>
   </v-container>
 </template>
 

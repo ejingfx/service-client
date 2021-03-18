@@ -28,12 +28,16 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'PagesDrawer',
   data () {
     return {
-      pages: []
     }
+  },
+  computed: {
+    ...mapState(['pages'])
   }
 }
 </script>

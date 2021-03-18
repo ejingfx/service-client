@@ -145,6 +145,11 @@
             <v-list-item-title>
               Logout
             </v-list-item-title>
+            <v-list-item-action>
+              <v-icon small>
+                mdi-logout
+              </v-icon>
+            </v-list-item-action>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -223,17 +228,13 @@ export default {
             this.$store.dispatch('SET_WORKSPACE', response.data)
             this.$store.dispatch('COOKIE_UPDATE', cookiePayload)
             this.$store.dispatch('SET_SNACKBAR', {
-              snackbar: {
-                ...snackbar.saved,
-                ...{ message: 'Switching Workspace' }
-              }
+              ...snackbar.saved,
+              ...{ message: 'Switching Workspace' }
             })
           } else if (response.errors) {
             this.$store.dispatch('SET_SNACKBAR', {
-              snackbar: {
-                ...snackbar.error,
-                ...{ message: response.errors }
-              }
+              ...snackbar.error,
+              ...{ message: response.errors }
             })
           }
         })

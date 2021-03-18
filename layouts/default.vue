@@ -99,7 +99,7 @@ import FormsDrawer from '@/components/FormsDrawer'
 import Invite from '@/components/Invite'
 
 export default {
-  name: 'default',
+  name: 'Default',
   components: {
     AppHeader,
     UserInfoDrawer,

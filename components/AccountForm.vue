@@ -78,8 +78,7 @@ export default {
           value => !!value || 'Email is required',
           value => /.+@.+\..+/.test(value) || 'Email must be valid'
         ]
-      },
-      snackbar
+      }
     }
   },
   watch: {
@@ -120,20 +119,18 @@ export default {
                 }
               }
               this.$store.dispatch('COOKIE_UPDATE', cookiePayload)
-              this.$store.dispatch('SET_SNACKBAR', { snackbar: snackbar.saved })
+              this.$store.dispatch('SET_SNACKBAR', snackbar.saved)
             } else if (response.errors) {
               this.loading = false
-              this.$emit('error', {
-                snackbar: {
-                  ...this.snackbar.error,
-                  ...{ message: response.errors }
-                }
+              this.$store.dispatch('SET_SNACKBAR', {
+                ...snackbar.error,
+                ...{ message: response.errors }
               })
             }
           })
           .catch(() => {
             this.loading = false
-            this.$store.dispatch('SET_SNACKBAR', { snackbar: this.snackbar.error })
+            this.$store.dispatch('SET_SNACKBAR', snackbar.error)
           })
       }
     }

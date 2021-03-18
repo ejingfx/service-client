@@ -31,16 +31,16 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'FavoritesDrawer',
   data () {
     return {
-      favorites: [
-        {
-          title: 'item 1'
-        }
-      ]
     }
+  },
+  computed: {
+    ...mapState(['favorites'])
   }
 }
 </script>

@@ -34,15 +34,20 @@ export const settings = [
 ]
 
 export const snackbar = {
-  saved: {
-    show: true,
-    message: 'Saved successfully',
-    color: 'success'
-  },
   error: {
     show: true,
     message: 'Something went wrong, unable to save',
     color: 'error'
+  },
+  info: {
+    show: true,
+    message: '',
+    color: 'primary'
+  },
+  saved: {
+    show: true,
+    message: 'Saved successfully',
+    color: 'success'
   }
 }
 

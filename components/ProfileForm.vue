@@ -155,8 +155,7 @@ export default {
         address: [
           value => value.length <= 200 || 'Max of 200 characters'
         ]
-      },
-      snackbar
+      }
     }
   },
   computed: {
@@ -186,25 +185,19 @@ export default {
           .then(response => {
             if (response.data) {
               this.loading = false
-              this.$emit('saved', {
-                data: response.data,
-                snackbar: this.snackbar.saved
-              })
+              this.$emit('saved', { data: response.data })
+              this.$store.dispatch('SET_SNACKBAR', snackbar.saved)
             } else if (response.errors) {
               this.loading = false
-              this.$emit('error', {
-                snackbar: {
-                  ...this.snackbar.error,
-                  ...{ message: response.errors }
-                }
+              this.$store.dispatch('SET_SNACKBAR', {
+                ...snackbar.error,
+                ...{ message: response.errors }
               })
             }
           })
           .catch(() => {
             this.loading = false
-            this.$emit('error', {
-              snackbar: this.snackbar.error
-            })
+            this.$store.dispatch('SET_SNACKBAR', snackbar.error)
           })
       }
     }

@@ -152,7 +152,6 @@ export default {
       payload: [],
       remove: false,
       showForm: false,
-      snackbar,
       rules: {
         name: [
           value => !!value || 'Name is required',
@@ -175,9 +174,6 @@ export default {
         url: ''
       }
     }
-  },
-  mounted () {
-    console.log('a', this.$redirect)
   },
   methods: {
     fill (item) {
@@ -207,21 +203,17 @@ export default {
             if (response.data) {
               this.loading = false
               this.showForm = false
-              this.$emit('saved', {
-                data: response.data,
-                snackbar: this.snackbar.saved
-              })
               this.index = null
               this.payload = []
+              this.$emit('saved', { data: response.data })
+              this.$store.dispatch('SET_SNACKBAR', response.data)
               if (this.remove) { this.remove = false }
             } else if (response.errors) {
               this.loading = false
               this.payload = []
-              this.$emit('error', {
-                snackbar: {
-                  ...this.snackbar.error,
-                  ...{ message: response.errors }
-                }
+              this.$store.dispatch('SET_SNACKBAR', {
+                ...snackbar.error,
+                ...{ message: response.errors }
               })
               if (this.remove) { this.remove = false }
             }
@@ -229,9 +221,7 @@ export default {
           .catch(() => {
             this.loading = false
             this.payload = []
-            this.$emit('error', {
-              snackbar: this.snackbar.error
-            })
+            this.$store.dispatch('SET_SNACKBAR', snackbar.error)
             if (this.remove) { this.remove = false }
           })
       }

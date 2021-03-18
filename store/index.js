@@ -68,7 +68,7 @@ const mutations = {
     Object.assign(state, { ...payload })
   },
   setSnackbar (state, payload) {
-    Object.assign(state, { ...payload })
+    Object.assign(state.snackbar, payload)
   },
   setWorkspace (state, payload) {
     state.user.workspace = payload
@@ -80,11 +80,9 @@ const mutations = {
       for (const [value] of Object.entries(state)) {
         if (_.isObject(value) && Object.keys(value).includes(payload.data.key)) {
           value[payload.data.key] = payload.data.value
-          console.log('inner')
         }
       }
     } else {
-      console.log('root')
       state[payload.data.key] = payload.data.value
     }
     const COOKIE_NAME = process.env.NUXT_ENV_COOKIE_NAME
