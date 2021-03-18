@@ -22,9 +22,13 @@
           <v-list>
             <FavoritesDrawer />
             <v-divider />
+            <FormsDrawer />
+            <v-divider />
             <PagesDrawer />
             <v-divider />
-            <FormsDrawer />
+            <ProjectsDrawer />
+            <v-divider />
+            <TeamsDrawer />
           </v-list>
         </div>
       </div>
@@ -96,6 +100,8 @@ import NavDrawer from '@/components/NavDrawer'
 import FavoritesDrawer from '@/components/FavoritesDrawer'
 import PagesDrawer from '@/components/PagesDrawer'
 import FormsDrawer from '@/components/FormsDrawer'
+import ProjectsDrawer from '@/components/ProjectsDrawer'
+import TeamsDrawer from '@/components/TeamsDrawer'
 import Invite from '@/components/Invite'
 
 export default {
@@ -107,6 +113,8 @@ export default {
     FavoritesDrawer,
     PagesDrawer,
     FormsDrawer,
+    ProjectsDrawer,
+    TeamsDrawer,
     Invite
   },
   data () {

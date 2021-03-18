@@ -8,11 +8,13 @@ const state = () => ({
   forms: [],
   organizations: [],
   pages: [],
+  projects: [],
   snackbar: {
     color: 'success',
     message: '',
     show: false
   },
+  teams: [],
   token: '',
   user: {}
 })
