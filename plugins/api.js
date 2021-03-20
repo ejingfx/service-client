@@ -10,7 +10,7 @@ export default (context, inject) => {
   const updateAccount = async (id, payload) => {
     const config = {
       method: 'PUT',
-      url: `${process.env.NUXT_ENV_API_URL}/user/account/${id}`,
+      url: `/user/account/${id}`,
       data: { ...payload }
     }
     return (await context.$axios(config)).data
@@ -19,7 +19,7 @@ export default (context, inject) => {
   const updateProfile = async (username, payload) => {
     const config = {
       method: 'PUT',
-      url: `${process.env.NUXT_ENV_API_URL}/user/profile/${username}`,
+      url: `/user/profile/${username}`,
       data: { ...payload }
     }
     return (await context.$axios(config)).data
@@ -28,7 +28,7 @@ export default (context, inject) => {
   const setWorkspace = async (id, workspaceId) => {
     const config = {
       method: 'PUT',
-      url: `${process.env.NUXT_ENV_API_URL}/user/workspace`,
+      url: '/user/workspace',
       data: { id, workspace: workspaceId }
     }
     return (await context.$axios(config)).data

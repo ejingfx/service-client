@@ -33,6 +33,12 @@ export default {
   name: 'AppearanceSettings',
   components: {
     SettingsRoutes
+  },
+  middleware: ['auth'],
+  head () {
+    return {
+      title: 'Appearance'
+    }
   }
 }
 </script>

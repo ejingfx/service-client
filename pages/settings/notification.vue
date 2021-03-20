@@ -32,6 +32,12 @@ export default {
   name: 'NotificationSettings',
   components: {
     SettingsRoutes
+  },
+  middleware: ['auth'],
+  head () {
+    return {
+      title: 'Notification'
+    }
   }
 }
 </script>

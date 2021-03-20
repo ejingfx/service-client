@@ -34,6 +34,11 @@ export default {
   components: {
     SettingsRoutes
   },
-  middleware: ['auth']
+  middleware: ['auth'],
+  head () {
+    return {
+      title: 'Settings'
+    }
+  }
 }
 </script>

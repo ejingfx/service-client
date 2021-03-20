@@ -5,6 +5,11 @@
 <script>
 export default {
   name: 'Tickets',
-  middleware: ['auth']
+  middleware: ['auth'],
+  head () {
+    return {
+      title: 'Tickets'
+    }
+  }
 }
 </script>
