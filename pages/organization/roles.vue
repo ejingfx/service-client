@@ -57,7 +57,7 @@
                     <v-btn
                       plain
                       color="primary"
-                      @click="show = true, modify = { show: true, action: 'open' }"
+                      @click="show = true, modify = { show: true, index: null, action: 'open' }"
                     >
                       <v-icon>
                         mdi-plus
@@ -131,10 +131,10 @@
                       </v-btn>
                       <v-divider class="mb-5" />
                       <RBACForm
-                        v-if="show"
+                        v-show="show"
                         :rbac="rbac"
                         :modify="modify"
-                        @saved="custom_rbac = $event.data.custom, rbac = $event.data.rbac"
+                        @saved="show = false, custom_rbac = $event.data.custom, rbac = $event.data.rbac"
                       />
                     </v-col>
                   </v-row>
@@ -164,10 +164,8 @@ export default {
   },
   middleware: ['auth'],
   async asyncData ({ $api, store }) {
-    console.log('asyncData')
     if (!_.isNull(store.state.user.workspace)) {
       const response = await $api.getRBAC(store.state.user.workspace)
-      console.log('response', response)
       // eslint-disable-next-line camelcase
       const custom = response.data.custom_rbac
       const rbac = response.data.rbac
@@ -202,7 +200,8 @@ export default {
       tab: null,
       modify: {
         action: '',
-        data: false
+        index: null,
+        data: null
       }
     }
   },
@@ -214,13 +213,9 @@ export default {
   computed: {
     ...mapState(['user'])
   },
-  watchQuery (newQuery, oldQuery) {
-    console.log('qqq', newQuery, oldQuery)
-  },
   watch: {
     custom (value) {
       this.custom = value
-      console.log('watch', value)
     }
   },
   methods: {
@@ -228,27 +223,20 @@ export default {
       this.show = true
       this.modify = {
         action: 'update',
+        index: this.rbac.indexOf(item),
         data: { ...item }
       }
-      console.log('fill', this.modify)
-      // this.index = this.contact.indexOf(item)
-      // this.form = { ...this.contact[this.index] }
     },
     remove (item) {
-      console.log('REMOVE', item)
-      this.modify = {
+      const data = []
+      data.concat(this.rbac)
+      data.splice(this.rbac.indexOf(item), 1)
+      const obj = {
         action: 'remove',
-        data: item
+        index: this.rbac.indexOf(item),
+        data
       }
-      // this.index = this.contact.indexOf(item)
-      // this.form = { ...this.contact[this.index] }
-    },
-    reset () {
-      // this.$refs.form.resetValidation()
-      // this.form = { ...this.contact[this.index] }
-    },
-    saved (e) {
-      console.log('saved', e)
+      this.modify = { ...this.modify, ...obj }
     }
   }
 }

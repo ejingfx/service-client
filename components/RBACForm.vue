@@ -37,7 +37,6 @@
           <v-btn
             type="submit"
             color="primary"
-            @click.stop="submit"
           >
             {{ modify.action !== 'update' ? 'ADD' : 'SAVE' }}
           </v-btn>
@@ -79,6 +78,8 @@ export default {
         scope: []
       },
       index: null,
+      payload: {},
+      remove: true,
       rules: {
         role: [
           value => !!value || 'Role name is required',
@@ -102,18 +103,20 @@ export default {
       title: 'RBAC'
     }
   },
-  watchQuery (newQuery, oldQuery) {
-    console.log('qqq', newQuery, oldQuery)
-  },
   watch: {
-    show (value) {
-      console.log('show', value)
-    },
     modify (value) {
-      console.log('modify', value)
+      console.log('watch modify', value)
       if (value.action === 'update') {
         this.form = { ...value.data }
         this.init = { ...this.form }
+      } else if (value.action === 'open') {
+        this.init = { ...this.form }
+      } else if (value.action === 'remove') {
+        this.index = value.index
+        this.remove = true
+        this.payload = { rbac: this.rbac }
+        this.payload.rbac.splice(this.index, 1)
+        console.log('watch modify', this.payload.rbac.length)
       } else if (value.action === 'close') {
         this.form = {
           role: '',
@@ -130,15 +133,12 @@ export default {
   mounted () {
     this.rbacList = this.rbac
     if (this.modify.action === 'update') {
+      this.index = this.modify.index
       this.form = { ...this.modify.data }
       this.init = { ...this.form }
     } else if (this.modify.action === 'remove') {
-      this.form = {
-        role: '',
-        description: '',
-        scope: []
-      }
-      this.init = { ...this.form }
+      console.log('mounted remove', this.modify)
+      this.index = this.modify.index
     } else if (this.modify.action === 'close') {
       this.form = {
         role: '',
@@ -154,18 +154,28 @@ export default {
     reset () {
       this.$refs.form.resetValidation()
       this.form = { ...this.init }
+      this.index = null
+      this.remove = null
+      this.show = false
     },
     async submit () {
-      if (this.$refs.form.validate()) {
+      if (this.$refs.form.validate() || this.remove) {
         this.loading = true
-        const payload = {
-          rbac: []
+        let payload = { rbac: this.rbac }
+        console.log('init payload', payload)
+
+        if (this.index === null) {
+          payload.rbac.push(this.form)
+        } else if (this.remove) {
+          payload = {
+            ...payload,
+            ...{ rbac: this.payload.rbac }
+          }
+        } else {
+          payload.rbac[this.modify.index] = this.form
         }
 
-        if (this.modify === 'update') {
-          this.rbac.concat([this.form])
-        }
-
+        // console.log('submit payload', payload)
         await this.$api
           .setRBAC(payload)
           .then(response => {
@@ -173,6 +183,7 @@ export default {
               this.loading = false
               this.$store.dispatch('SET_SNACKBAR', snackbar.saved)
               this.$emit('saved', { data: response.data })
+              this.reset()
             } else if (response.errors) {
               this.loading = false
               this.$store.dispatch('SET_SNACKBAR', {
