@@ -37,8 +37,8 @@ export default {
         },
         {
           icon: 'mdi-clipboard-outline',
-          title: 'Tickets',
-          to: '/tickets'
+          title: 'Organization',
+          to: '/organization'
         },
 
         {

@@ -99,7 +99,7 @@
               flat
               @click.stop="setWorkspace(item)"
             >
-              <v-list-item-title>{{ item.name | capitalize }}</v-list-item-title>
+              <v-list-item-title>{{ item.name }}</v-list-item-title>
               <v-list-item-action>
                 <v-icon
                   v-if="item._id === user.workspace"
